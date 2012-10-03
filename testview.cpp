@@ -50,6 +50,15 @@ bool TestView::SetAttribute(QString attribute, QString value) {
     if (attribute == "name") {
         this->name = value;
     }
+    if (attribute == "cache") {
+        this->use_cache = (value == "on") ? true : false;
+    }
+    if (attribute == "db") {
+        this->use_local_db = (value == "on") ? true : false;
+    }
+    if (attribute == "cookies") {
+        this->use_cookies = (value == "on") ? true : false;
+    }
     return true;
 }
 void TestView::Load(QString url) {

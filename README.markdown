@@ -29,3 +29,12 @@ View.FinishedLoadingSignal.connect(function () {
 });
 View.Load("http://mysite.com");
 ```
+
+You can turn some options on/off
+
+```javascript
+var View = Factory.GetTestView("MyView");
+View.SetAttribute("name|cache|db|cookies","on|off");
+// Then call CreateView...
+View.CreateView();
+```
