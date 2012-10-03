@@ -58,3 +58,5 @@ for (var i = 0; i < 20; i++) {
   views[view_name].Load("starting url");
 }
 ```
+
+Each view will have it's own log file in ./logs which is named after its name. If you want a combined log file, you can name them all the same. But then you couldn't differentiate. Plans are in place to change this behavior.
