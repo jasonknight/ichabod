@@ -3,4 +3,7 @@
 moc_*
 *.o
 logs/
-
+downloads/
+moc_*
+*.o
+*.user

@@ -15,15 +15,12 @@ void Downloader::setReply(QNetworkReply *rep) {
     connect(reply,SIGNAL(downloadProgress(qint64,qint64)),this,SLOT(updateFileProgress(qint64,qint64)));
 }
 void Downloader::writeFile() {
-    qDebug() << "Write File called for " + this->file_name;
     QByteArray ba = reply->readAll();
     QFile f(file_name);
     if (f.open(QIODevice::WriteOnly)) {
         QTextStream out(&f);
         out << ba;
         f.close();
-        qDebug() << "save completed.";
-
     } else {
         qDebug() << "Failed to save file" << file_name;
     }
@@ -40,5 +37,4 @@ void Downloader::writeFile() {
 }
 void Downloader::updateFileProgress(qint64 read,qint64 total) {
     qDebug() << this->file_name << ": " << QString::number(read) << "  " << QString::number(total);
-
 }

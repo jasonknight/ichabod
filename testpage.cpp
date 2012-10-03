@@ -1,9 +1,12 @@
 #include "testpage.h"
 #include <QDateTime>
 #include <QFileInfo>
+#include <QDir>
 TestPage::TestPage(QObject * parent):QWebPage(parent) {
     connect(this,SIGNAL(unsupportedContent(QNetworkReply*)),this,SLOT(downloadFile(QNetworkReply*)));
     this->num_of_downloads = 0;
+    this->downloaded_files = new QStringList;
+    this->console_messages = new QStringList;
 }
 
 void TestPage::javaScriptConsoleMessage ( const QString & message, int lineNumber, const QString & sourceID  ) {
@@ -47,16 +50,22 @@ bool TestPage::SetAttribute(QString attribute, QString value) {
 }
 void TestPage::downloadFile(QNetworkReply *reply) {
     QString default_file_name = QFileInfo(reply->url().toString()).fileName();
+    QDir().mkpath("downloads/");
     QString file_name = "downloads/" + default_file_name + "." + QString::number(QDateTime::currentDateTime().toTime_t());
-    if (file_name.isEmpty())
+    if (file_name.isEmpty()) {
+        qDebug() << "filename is empty";
         return;
+    }
     Downloader * d = new Downloader;
     d->file_name = file_name;
+
     //connect(d,SIGNAL(fileProgressUpdated(int)),this->main,SLOT(setProgress(int)));
     connect(d,SIGNAL(finished()),d,SLOT(deleteLater()));
     connect(d,SIGNAL(fileDownloaded(QString)),this,SLOT(fileDownloaded(QString)));
+    d->setReply(reply);
 }
 void TestPage::fileDownloaded(QString fname) {
+
     this->downloaded_files->append(fname);
     this->num_of_downloads += 1;
     emit FileDownloadedSignal(fname);

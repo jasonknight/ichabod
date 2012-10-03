@@ -35,3 +35,6 @@ HEADERS += \
     logger.h \
     downloader.h
 LIBS += -lrt
+
+OTHER_FILES += \
+    test.js

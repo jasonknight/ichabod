@@ -33,6 +33,7 @@ public slots:
     QString GetContent();
     QString GetContentAsText();
     QString GetName() { return this->name; }
+    QObject * GetPage();
 
 private slots:
     void JavaScriptWindowObjectCleared();

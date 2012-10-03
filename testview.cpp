@@ -17,8 +17,9 @@ TestView::TestView(QObject *parent) : QObject(parent), QScriptable () {
 void TestView::CreateView() {
 
     this->page = new TestPage;
+    this->page->setForwardUnsupportedContent(true);
     this->view = new QWebView;
-    //this->view->setPage(this->page);
+    this->view->setPage(this->page);
     logger = new Logger();
     logger->name = this->name;
     Network* net = new Network(this);
@@ -73,4 +74,7 @@ QString TestView::GetContent() {
 }
 QString TestView::GetContentAsText() {
     return view->page()->mainFrame()->toPlainText();
+}
+QObject * TestView::GetPage() {
+    return (QObject *)this->view->page();
 }
