@@ -28,7 +28,6 @@ void TestView::CreateView() {
     connect(net,SIGNAL(logMessage(QString,QString)),logger,SLOT(logMessage(QString,QString)));
     this->view->page()->setNetworkAccessManager(net);
     if (this->use_cache) {
-        qDebug() << "Creating Disk Cache";
         QNetworkDiskCache *diskCache = new QNetworkDiskCache;
         diskCache->setCacheDirectory(this->cache_location);
         this->view->page()->networkAccessManager()->setCache(diskCache);
@@ -46,7 +45,6 @@ void TestView::CreateView() {
     connect(view, SIGNAL(loadProgress(int)), SLOT(SetProgress(int)));
     connect(view, SIGNAL(loadFinished(bool)), SLOT(FinishedLoading(bool)));
     //connect(this,SIGNAL(loadUrlSignal(QString&)),this,SLOT(loadUrl(QString&)));
-    qDebug() << "TestView created...";
 }
 bool TestView::SetAttribute(QString attribute, QString value) {
     if (attribute == "name") {

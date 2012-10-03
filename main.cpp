@@ -38,7 +38,6 @@ int main(int argc, char *argv[])
      engine->globalObject().setProperty("IO", IOobjectValue);
      qDebug() << "Executing script" << fileName;
      QScriptValue r = engine->evaluate(code);
-     qDebug() << "...well...";
       if (engine->hasUncaughtException()) {
           QStringList backtrace = engine->uncaughtExceptionBacktrace();
           fprintf (stderr, "    %s\n%s\n\n", qPrintable(r.toString()),

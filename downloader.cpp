@@ -9,7 +9,6 @@ Downloader::Downloader(QObject *parent) :
 }
 void Downloader::setReply(QNetworkReply *rep) {
     this->reply = rep;
-    qDebug() << "Setting reply for downloader.";
     gettimeofday(&this->p_start_time, NULL);
     connect(this->reply,SIGNAL(finished()),this,SLOT(writeFile()));
     connect(reply,SIGNAL(downloadProgress(qint64,qint64)),this,SLOT(updateFileProgress(qint64,qint64)));
@@ -36,5 +35,5 @@ void Downloader::writeFile() {
 
 }
 void Downloader::updateFileProgress(qint64 read,qint64 total) {
-    qDebug() << this->file_name << ": " << QString::number(read) << "  " << QString::number(total);
+    //qDebug() << this->file_name << ": " << QString::number(read) << "  " << QString::number(total);
 }

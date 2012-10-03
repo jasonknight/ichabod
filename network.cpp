@@ -24,22 +24,19 @@ QNetworkReply * Network::createRequest(
     }
 
     QString filename = QFileInfo(request.url().toString()).fileName();
-
-    history[filename] = QDateTime::currentDateTime().toTime_t();
-    QString message = request.url().toString() + ": Started at: " + QString::number(history[filename]);
+    QDateTime now = QDateTime::currentDateTime();
+    history[filename] = now.toTime_t();
+    QString message = request.url().toString() + ": Started at: " + now.toString();
     emit logMessage(this->name,message);
     return QNetworkAccessManager::createRequest(operation, request, device);
 }
 void Network::requestCompleted(QNetworkReply *reply) {
-    qDebug() << "Request Completed...";
     QString url = reply->url().toString();
     QString filename = QFileInfo(url).fileName();
     QDateTime now = QDateTime::currentDateTime();
     QString message = url + ": Ended at: " + now.toString();
-    emit logMessage(this->name,message);
-    message = url;
     int diff = now.msecsTo(QDateTime::fromTime_t(history[filename])) * -1;
-    message = message + ": [" + QString::number(diff) +"]ms";
+    message = message + " [" + QString::number(diff) +"]ms";
     history[filename] = 0;
     emit logMessage(this->name,message);
 }

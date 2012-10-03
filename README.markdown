@@ -14,3 +14,18 @@ qmake && make
 Look at test.js for examples. The max simultaneous browsers I have tested this with is 200.
 
 Each browser has Caching, Local databse, and Cookies which you can turn on or off on a per webView basis.
+
+
+```javascript
+var View = Factory.GetTestView("MyView");
+View.CreateView();
+View.FinishedLoadingSignal.connect(function () {
+  var txt = View.GetContentAsText();
+  if (txt.indexOf("Some String I am Looking for") != -1) {
+    print("yay");
+  } else {
+    print("nay);
+  }
+});
+View.Load("http://mysite.com");
+```
