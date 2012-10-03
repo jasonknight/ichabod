@@ -24,7 +24,7 @@ View.FinishedLoadingSignal.connect(function () {
   if (txt.indexOf("Some String I am Looking for") != -1) {
     print("yay");
   } else {
-    print("nay);
+    print("nay");
   }
 });
 View.Load("http://mysite.com");
