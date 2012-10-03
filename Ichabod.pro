@@ -21,7 +21,8 @@ SOURCES += main.cpp \
     network.cpp \
     factory.cpp \
     io.cpp \
-    logger.cpp
+    logger.cpp \
+    downloader.cpp
 
 HEADERS += \
     testview.h \
@@ -31,5 +32,6 @@ HEADERS += \
     factory.h \
     io.h \
     macros.h \
-    logger.h
+    logger.h \
+    downloader.h
 LIBS += -lrt

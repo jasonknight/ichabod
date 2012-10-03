@@ -2,7 +2,8 @@
 #define TESTPAGE_H
 #include <QObject>
 #include <QWebPage>
-
+#include <QStringList>
+#include "downloader.h"
 class TestPage : public QWebPage
 {
     Q_OBJECT
@@ -14,15 +15,18 @@ public:
     QStringList * console_messages;
     QString user_agent;
     QString alert_string;
+    int num_of_downloads;
+    QStringList * downloaded_files;
+signals:
+    void FileDownloadedSignal(QString fname);
 public slots:
     bool SetAttribute(QString attribute,QString value);
     QStringList GetConsoleMessages();
     bool ClearConsoleMessages();
     QString GetAlertString();
-
-
     // Downloading
     void downloadFile(QNetworkReply * reply);
+    void fileDownloaded(QString);
 protected:
     virtual void javaScriptConsoleMessage ( const QString & message, int lineNumber, const QString & sourceID  );
     void javaScriptAlert(QWebFrame* frame, const QString& msg);

@@ -1,6 +1,10 @@
 #include "testpage.h"
-
-TestPage::TestPage(QObject * parent):QWebPage(parent) { }
+#include <QDateTime>
+#include <QFileInfo>
+TestPage::TestPage(QObject * parent):QWebPage(parent) {
+    connect(this,SIGNAL(unsupportedContent(QNetworkReply*)),this,SLOT(downloadFile(QNetworkReply*)));
+    this->num_of_downloads = 0;
+}
 
 void TestPage::javaScriptConsoleMessage ( const QString & message, int lineNumber, const QString & sourceID  ) {
     QString err = QString() + "A Javascript error Occurred: " + message + "'\nat line " + QString::number(lineNumber) + "\nin " + sourceID;
@@ -42,5 +46,18 @@ bool TestPage::SetAttribute(QString attribute, QString value) {
     return true;
 }
 void TestPage::downloadFile(QNetworkReply *reply) {
-
+    QString default_file_name = QFileInfo(reply->url().toString()).fileName();
+    QString file_name = "downloads/" + default_file_name + "." + QString::number(QDateTime::currentDateTime().toTime_t());
+    if (file_name.isEmpty())
+        return;
+    Downloader * d = new Downloader;
+    d->file_name = file_name;
+    //connect(d,SIGNAL(fileProgressUpdated(int)),this->main,SLOT(setProgress(int)));
+    connect(d,SIGNAL(finished()),d,SLOT(deleteLater()));
+    connect(d,SIGNAL(fileDownloaded(QString)),this,SLOT(fileDownloaded(QString)));
+}
+void TestPage::fileDownloaded(QString fname) {
+    this->downloaded_files->append(fname);
+    this->num_of_downloads += 1;
+    emit FileDownloadedSignal(fname);
 }
