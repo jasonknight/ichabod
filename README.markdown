@@ -19,7 +19,7 @@ Each browser has Caching, Local databse, and Cookies which you can turn on or of
 ```javascript
 var View = Factory.GetTestView("MyView");
 View.CreateView();
-View.FinishedLoadingSignal.connect(function () {
+View.FinishedLoadingSignal.connect(function (name_of_view) {
   var txt = View.GetContentAsText();
   if (txt.indexOf("Some String I am Looking for") != -1) {
     print("yay");
@@ -37,4 +37,24 @@ var View = Factory.GetTestView("MyView");
 View.SetAttribute("name|cache|db|cookies","on|off");
 // Then call CreateView...
 View.CreateView();
+```
+
+You probably want to create a crap load of views, and connect them up to a FinishedLoadingSignal, so the name of the View is the key
+
+```javascript
+
+var views = {};
+
+function myHandler(name) {
+  print(name + " has finished loading");
+  views[name].Load("another url");
+}
+
+for (var i = 0; i < 20; i++) {
+  var view_name = "View" + i;
+  views[view_name] = Factory.GetTestView("MyView");
+  views[view_name].CreateView();
+  views[view_name].FinishedLoadingSignal.connect(myHandler);
+  views[view_name].Load("starting url");
+}
 ```
