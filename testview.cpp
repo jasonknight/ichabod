@@ -2,9 +2,12 @@
 #include <QDesktopServices>
 #include <QNetworkDiskCache>
 #include <QWebFrame>
+#include <QWebPage>
+#include <QWebElement>
 #include "network.h"
 #include "cookiejar.h"
 #include <QDebug>
+#include "browserdialog.h"
 TestView::TestView(QObject *parent) : QObject(parent), QScriptable () {
     this->use_cache = true;
     this->use_local_db = true;
@@ -41,6 +44,7 @@ void TestView::CreateView() {
         jar->Init();
         this->view->page()->networkAccessManager()->setCookieJar(jar);
     }
+    QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
     connect(view->page()->mainFrame(),SIGNAL(javaScriptWindowObjectCleared()),this,SLOT(JavaScriptWindowObjectCleared()));
     connect(view, SIGNAL(loadProgress(int)), SLOT(SetProgress(int)));
     connect(view, SIGNAL(loadFinished(bool)), SLOT(FinishedLoading(bool)));
@@ -62,6 +66,7 @@ bool TestView::SetAttribute(QString attribute, QString value) {
     return true;
 }
 void TestView::Load(QString url) {
+    this->lastLoadedPath = url;
     this->view->load(QUrl::fromUserInput(url));
 }
 void TestView::JavaScriptWindowObjectCleared() {
@@ -76,12 +81,39 @@ void TestView::FinishedLoading(bool b) {
 void TestView::ExecuteJS(QString &js) {
     view->page()->mainFrame()->evaluateJavaScript(js);
 }
+void TestView::Fill(QString id, QString value) {
+    view->page()->mainFrame()->evaluateJavaScript("$('" + id + "').val('" + value + "');");
+}
+void TestView::Click(QString id) {
+    view->page()->mainFrame()->evaluateJavaScript("$('" + id + "').click();");
+}
+void TestView::MouseDown(QString id) {
+    view->page()->mainFrame()->evaluateJavaScript("$('" + id + "').trigger('mousedown');");
+}
+void TestView::MouseUp(QString id) {
+    view->page()->mainFrame()->evaluateJavaScript("$('" + id + "').trigger('mouseup');");
+}
 QString TestView::GetContent() {
     return view->page()->mainFrame()->toHtml();
 }
 QString TestView::GetContentAsText() {
     return view->page()->mainFrame()->toPlainText();
 }
+QString TestView::GetContentOfElement(QString selector) {
+    QWebPage * p = (QWebPage *) this->page;
+    QWebElement el = p->mainFrame()->findFirstElement(selector);
+    if (el.isNull()) {
+        return QString("");
+    }
+    return el.toInnerXml();
+}
 QObject * TestView::GetPage() {
     return (QObject *)this->view->page();
+}
+void TestView::Show() {
+    BrowserDialog * d = new BrowserDialog;
+    d->append(this->view);
+    d->show();
+    d->raise();
+    d->activateWindow();
 }

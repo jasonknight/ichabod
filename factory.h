@@ -13,6 +13,7 @@ signals:
     
 public slots:
     QObject * GetTestView(QString name = "Default");
+
 };
 
 #endif // FACTORY_H

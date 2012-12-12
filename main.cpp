@@ -8,6 +8,8 @@
 #include "factory.h"
 #include "io.h"
 #include "macros.h"
+#include "browserdialog.h"
+#include "tarrytown.h"
 
 int main(int argc, char *argv[])
 {
@@ -24,19 +26,17 @@ int main(int argc, char *argv[])
          return(-1);
      }
 
-     QScriptEngine * engine = new QScriptEngine;
-
-
-
+     //QScriptEngine * engine = new QScriptEngine;
      QString code = QTextStream(&file).readAll();
      file.close();
-     Factory * f = new Factory;
+     /* Factory * f = new Factory;
      IO * io = new IO;
      QScriptValue objectValue = engine->newQObject(f);
      QScriptValue IOobjectValue = engine->newQObject(io);
      engine->globalObject().setProperty("Factory", objectValue);
      engine->globalObject().setProperty("IO", IOobjectValue);
      qDebug() << "Executing script" << fileName;
+
      QScriptValue r = engine->evaluate(code);
       if (engine->hasUncaughtException()) {
           QStringList backtrace = engine->uncaughtExceptionBacktrace();
@@ -44,6 +44,8 @@ int main(int argc, char *argv[])
                    qPrintable(backtrace.join("\n")));
           return EXIT_FAILURE;
       }
-
+    */
+      TarryTown * env = new TarryTown;
+      env->evaluate(code,fileName);
       return a.exec();
 }

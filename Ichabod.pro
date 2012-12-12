@@ -22,7 +22,9 @@ SOURCES += main.cpp \
     factory.cpp \
     io.cpp \
     logger.cpp \
-    downloader.cpp
+    downloader.cpp \
+    browserdialog.cpp \
+    tarrytown.cpp
 
 HEADERS += \
     testview.h \
@@ -33,8 +35,13 @@ HEADERS += \
     io.h \
     macros.h \
     logger.h \
-    downloader.h
+    downloader.h \
+    browserdialog.h \
+    tarrytown.h \
+    getkeyevent.h
 LIBS += -lrt
 
 OTHER_FILES += \
     test.js
+
+FORMS +=

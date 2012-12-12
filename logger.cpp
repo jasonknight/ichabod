@@ -13,7 +13,7 @@ void Logger::logMessage(QString sender_name, QString message) {
         QTextStream s(&file);
         s << sender_name << ": " << message << "\n";
         file.close();
-        qDebug() << sender_name << ": " << message << "\n";
+        //qDebug() << sender_name << ": " << message << "\n";
      } else {
         qDebug() << "Could not open log file.";
     }

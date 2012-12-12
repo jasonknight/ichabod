@@ -1,5 +1,6 @@
 #include "factory.h"
-
+#include "browserdialog.h"
+#include <QDebug>
 Factory::Factory(QObject *parent) :
     QObject(parent)
 {
@@ -11,3 +12,5 @@ QObject * Factory::GetTestView(QString name) {
 
     return (QObject *)t;
 }
+
+

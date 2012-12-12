@@ -19,22 +19,42 @@ public:
     bool use_cookies;
     QString cookie_location;
     QString name;
+    QString lastLoadedPath;
+    Q_PROPERTY( QString name WRITE setName READ getName )
+
+    Q_PROPERTY( QString lastLoadedPath WRITE setLastLoadedPath READ getLastLoadedPath )
+
+    QString status;
     int progress;
     Logger * logger;
 signals:
     void FinishedLoadingSignal(QString);
 public slots:
+
+    void setName(QString str) { name = str; }
+    QString getName() { return name; }
+
+    void setLastLoadedPath(QString str) { lastLoadedPath = str; }
+    QString getLastLoadedPath() { return lastLoadedPath; }
+
+
     bool SetAttribute(QString attribute,QString value);
     void CreateView();
     void Load(QString url);
     void SetProgress(int p);
     void FinishedLoading(bool);
     void ExecuteJS(QString &js);
+    void Show();
+    void Click(QString id);
+    void MouseDown(QString id);
+    void MouseUp(QString id);
+    void Fill(QString id, QString value);
     QString GetContent();
+    QString GetContentOfElement(QString selector);
     QString GetContentAsText();
     QString GetName() { return this->name; }
     QObject * GetPage();
-
+    QWebView * GetView() { return this->view; }
 private slots:
     void JavaScriptWindowObjectCleared();
 
