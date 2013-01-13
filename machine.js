@@ -63,7 +63,7 @@ var Machine = function (name) {
       self.state = "USERNAME";
     } else if (self.state == "USERNAME") {
       if (self.content.has("employees/login") != -1) {
-        sendText(self.view,"110");
+        sendText(self.view,"111");
         sendKey(self.view,"Enter");
         self.state = "LOGINSENT";
       } else if (self.content.has("TestVendor en-US") != -1) {
