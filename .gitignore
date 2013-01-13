@@ -7,3 +7,5 @@ downloads/
 moc_*
 *.o
 *.user
+Makefile
+ichabod

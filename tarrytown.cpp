@@ -62,7 +62,7 @@ void TarryTown::timerEvent(QTimerEvent *event) {
      if (expression.isString()) {
          evaluate(expression.toString());
      } else if (expression.isFunction()) {
-         qDebug() << "Calling expression";
+         //qDebug() << "Calling expression";
          expression.call();
      }
      emitScriptError();
