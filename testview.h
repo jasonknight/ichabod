@@ -26,6 +26,7 @@ public:
     Q_PROPERTY( QString lastLoadedPath WRITE setLastLoadedPath READ getLastLoadedPath )
     Q_INVOKABLE QVariantMap GetElement(QString selector);
     Q_INVOKABLE QVariantMap GetElement(QString selector,QStringList css_attrs);
+    Q_INVOKABLE void ExecuteJS(QString js);
     QString status;
     int progress;
     Logger * logger;
@@ -45,7 +46,7 @@ public slots:
     void Load(QString url);
     void SetProgress(int p);
     void FinishedLoading(bool);
-    void ExecuteJS(QString &js);
+
     void Show();
     void Click(QString id);
     void MouseDown(QString id);
