@@ -6,6 +6,7 @@
 #include <QScriptable>
 #include "testpage.h"
 #include "logger.h"
+#include <QVariantMap>
 class TestView : public QObject, protected QScriptable
 {
     Q_OBJECT
@@ -23,7 +24,8 @@ public:
     Q_PROPERTY( QString name WRITE setName READ getName )
 
     Q_PROPERTY( QString lastLoadedPath WRITE setLastLoadedPath READ getLastLoadedPath )
-
+    Q_INVOKABLE QVariantMap GetElement(QString selector);
+    Q_INVOKABLE QVariantMap GetElement(QString selector,QStringList css_attrs);
     QString status;
     int progress;
     Logger * logger;
