@@ -16,7 +16,9 @@ class TarryTown : public QObject
 public:
     TarryTown(QObject *parent = 0);
     ~TarryTown();
-    QScriptValue evaluate(const QString &code, const QString &fileName = QString());
+    Q_INVOKABLE QScriptValue evaluate(const QString &code, const QString &fileName = QString());
+    Q_INVOKABLE void KeyPress(QScriptValue target,QString text);
+    Q_INVOKABLE void KeyRelease(QScriptValue target,QString text);
     QScriptValue toWrapper(QObject *object);
     QScriptEngine *engine() const;
     bool hasIntervalTimers() const;
@@ -30,8 +32,7 @@ public slots:
     int setTimeout(const QScriptValue &expression, int delay);
     void clearTimeout(int timerId);
 
-    void KeyPress(QScriptValue target,QString text);
-    void KeyRelease(QScriptValue target,QString text);
+
 
     void TestFailure(QString msg);
 

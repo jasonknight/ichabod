@@ -35,7 +35,6 @@ void TarryTown::clearTimeout(int timerId)
 
  int TarryTown::setInterval(const QScriptValue &expression, int delay)
  {
-     qDebug() << "Setting interval";
      if (expression.isString() || expression.isFunction()) {
          int timerId = startTimer(delay);
          p_intervalHash.insert(timerId, expression);
@@ -45,7 +44,6 @@ void TarryTown::clearTimeout(int timerId)
  }
 
 void TarryTown::clearInterval(int timerId) {
-    qDebug() << "Clearing interval on c side";
     killTimer(timerId);
     p_intervalHash.remove(timerId);
 }

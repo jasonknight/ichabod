@@ -18,8 +18,14 @@ env.sendKey = function (target,key) {
 var Content = function (view) {
   var self = this;
   this.view = view;
+  this._content = null;
   this.has = function (text) {
-    return (self.view.GetContent().indexOf(text) != -1);
+    if (self._content == null) {
+      self._content = self.view.GetContent();
+    }
+    var ret = (self._content.indexOf(text) != -1);
+    self._content = null;
+    return ret;
   }
   this.of = function (id) {
     self._type = "Element["+id+"]";

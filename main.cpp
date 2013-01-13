@@ -5,6 +5,8 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
+#include <QDir>
+#include <QFileInfoList>
 #include "factory.h"
 #include "io.h"
 #include "macros.h"
@@ -27,6 +29,8 @@ int main(int argc, char *argv[])
      }
 
      //QScriptEngine * engine = new QScriptEngine;
+
+
      QString code = QTextStream(&file).readAll();
      file.close();
      /* Factory * f = new Factory;
@@ -46,6 +50,19 @@ int main(int argc, char *argv[])
       }
     */
       TarryTown * env = new TarryTown;
+      QDir dir("./lib");
+      dir.setFilter(QDir::Files);
+      QFileInfoList list = dir.entryInfoList();
+      for (int i = 0; i < list.size(); i++) {
+          QFileInfo info = list.at(i);
+          QFile file(info.absoluteFilePath());
+          if (file.open(QFile::ReadOnly)) {
+              qDebug() << "[ichabod] Loading lib file " << info.absoluteFilePath();
+              QString lib_code = QTextStream(&file).readAll();
+              file.close();
+              env->evaluate(lib_code,info.fileName());
+          }
+      }
       env->evaluate(code,fileName);
       return a.exec();
 }

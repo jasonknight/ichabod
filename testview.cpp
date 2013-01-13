@@ -107,6 +107,48 @@ QString TestView::GetContentOfElement(QString selector) {
     }
     return el.toInnerXml();
 }
+QVariantMap TestView::GetElement(QString selector) {
+    QWebPage * p = (QWebPage *) this->page;
+    QWebElement el = p->mainFrame()->findFirstElement(selector);
+    qDebug() << "Element found";
+    QVariantMap map;
+    map["classes"] = QVariant(el.classes());
+    map["tagName"] = QVariant(el.tagName());
+    QVariantMap attrs;
+    QStringList attributes = el.attributeNames();
+    foreach(QString name,attributes) {
+        attrs[name] = el.attribute(name);
+    }
+    map["attributes"] = QVariant(attrs);
+    QVariantMap css;
+    QStringList css_attrs = QStringList() << "display" << "background" << "color" << "font-size" << "position" << "top" << "left" << "bottom" << "right" << "border";
+    foreach (QString css_attr, css_attrs) {
+        css[css_attr] = el.styleProperty(css_attr, QWebElement::CascadedStyle);
+    }
+    map["css"] = QVariant(css);
+    return map;
+}
+QVariantMap TestView::GetElement(QString selector, QStringList css_attrs) {
+    QWebPage * p = (QWebPage *) this->page;
+    QWebElement el = p->mainFrame()->findFirstElement(selector);
+    qDebug() << "Element found";
+    QVariantMap map;
+    map["classes"] = QVariant(el.classes());
+    map["tagName"] = QVariant(el.tagName());
+    QVariantMap attrs;
+    QStringList attributes = el.attributeNames();
+    foreach(QString name,attributes) {
+        attrs[name] = el.attribute(name);
+    }
+    map["attributes"] = QVariant(attrs);
+    QVariantMap css;
+    foreach (QString css_attr, css_attrs) {
+        css[css_attr] = el.styleProperty(css_attr, QWebElement::CascadedStyle);
+    }
+    map["css"] = QVariant(css);
+    return map;
+}
+
 QObject * TestView::GetPage() {
     return (QObject *)this->view->page();
 }

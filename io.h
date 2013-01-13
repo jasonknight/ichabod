@@ -11,12 +11,12 @@ class IO : public QObject, protected QScriptable
 
 public:
     explicit IO(QObject *parent = 0);
-
+    Q_INVOKABLE QString read(QString file_name);
+    Q_INVOKABLE bool write(QString fileName,QString contents);
 signals:
 
 public slots:
-    QString read(QString &file_name);
-    bool write(QString &fileName,QString &contents);
+
 };
 
 #endif // IO_H
