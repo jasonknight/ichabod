@@ -39,7 +39,7 @@ var Machine = function (name) {
   machine.content = null;
   machine.state = 0;
   machine.statename = "";
-  machine.interval = 700;
+  machine.interval = 900;
 
   
   machine.kick_off_test = function () {
@@ -98,7 +98,7 @@ var Machine = function (name) {
       machine.state++;
     } else if (machine.statename == "ON_TABLE_VIEW") {
       var category_id = Math.floor((Math.random()*5)+1);
-      category_id = 1;
+      //category_id = 1;
       machine.view.MouseDown("#category_" + category_id);
       machine.state++;
     } else if (machine.statename == "ADD_ARTICLE") {
