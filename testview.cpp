@@ -78,9 +78,8 @@ void TestView::SetProgress(int p) {
 void TestView::FinishedLoading(bool b) {
     emit FinishedLoadingSignal(this->name);
 }
-void TestView::ExecuteJS(QString js) {
-    qDebug() << "executing js: " << js;
-    view->page()->mainFrame()->evaluateJavaScript(js);
+QVariant TestView::ExecuteJS(QString js) {
+   return view->page()->mainFrame()->evaluateJavaScript(js);
 }
 void TestView::Fill(QString id, QString value) {
     view->page()->mainFrame()->evaluateJavaScript("$('" + id + "').val('" + value + "');");
