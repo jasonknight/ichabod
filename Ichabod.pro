@@ -14,31 +14,32 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 
-SOURCES += main.cpp \
-    testview.cpp \
-    testpage.cpp \
-    cookiejar.cpp \
-    network.cpp \
-    factory.cpp \
-    io.cpp \
-    logger.cpp \
-    downloader.cpp \
-    browserdialog.cpp \
-    tarrytown.cpp
+SOURCES += src/main.cpp \
+    src/testview.cpp \
+    src/testpage.cpp \
+    src/cookiejar.cpp \
+    src/network.cpp \
+    src/factory.cpp \
+    src/io.cpp \
+    src/logger.cpp \
+    src/downloader.cpp \
+    src/browserdialog.cpp \
+    src/tarrytown.cpp \
+    src/helpers.cpp
 
 HEADERS += \
-    testview.h \
-    testpage.h \
-    cookiejar.h \
-    network.h \
-    factory.h \
-    io.h \
-    macros.h \
-    logger.h \
-    downloader.h \
-    browserdialog.h \
-    tarrytown.h \
-    getkeyevent.h
+    src/testview.h \
+    src/testpage.h \
+    src/cookiejar.h \
+    src/network.h \
+    src/factory.h \
+    src/io.h \
+    src/macros.h \
+    src/logger.h \
+    src/downloader.h \
+    src/browserdialog.h \
+    src/tarrytown.h \
+    src/getkeyevent.h
 LIBS += -lrt
 
 OTHER_FILES += \
