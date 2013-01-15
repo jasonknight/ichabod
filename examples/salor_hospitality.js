@@ -32,10 +32,12 @@ var Content = function (view) {
 }
 
 function test_spool() {
+  print("\n\n");
+  print("Clearing current_interval_id ", machine.current_interval_id);
   clearInterval(machine.current_interval_id);
   if (machine.current_test_index < machine.tests.length) {
     machine.current_test = machine.tests[machine.current_test_index];
-    print("\n\n=========== ENTERING TEST ==============");
+    print("\=========== ENTERING TEST ==============");
     machine.state = 0;
     machine.current_interval_id = setInterval(machine.current_test, machine.interval);
     machine.current_test_index++;
@@ -102,15 +104,68 @@ var Machine = function (name) {
   //================  TEST  ====================
   machine.run_order_one_article = function() {
     var states = ["",
-                  "ON_TABLE_VIEW",
+                  "HAS_ORDER_INFO",
+                  "CLICK_CATEGORY",
                   "ADD_ARTICLE",
                   "SUBMIT_ORDER"
                  ]
     machine.statename = states[machine.state];
     print("## run_order_one_article:" + machine.state + ':' + machine.statename);
     if (machine.statename == "") {
-      machine.view.Click(".table");
+      //machine.view.ExecuteJS("route('tables');");
+      //machine.view.ExecuteJS("$($('.table')[0]).mousedown();");
+      machine.view.MouseDown(".table");
       machine.state++;
+    //------------ STATE -----------------------
+    } else if (machine.statename == "HAS_ORDER_INFO") {
+      var order_info_html = machine.view.ExecuteJS("$('#order_info').html();");
+      //print(order_info_html);
+      if ((order_info_html.indexOf("Order #") == 0) || (order_info_html.indexOf("New order") == 0)) machine.state++;
+    //------------ STATE -----------------------
+    } else if (machine.statename == "CLICK_CATEGORY") {
+      machine.view.ExecuteJS("$($('.category')[0]).mousedown();");
+      machine.state++;
+    //------------ STATE -----------------------
+    } else if (machine.statename == "ADD_ARTICLE") {
+      machine.view.ExecuteJS("$($('.article')[0]).click();");
+      machine.state++;
+        //------------ STATE -----------------------
+    } else if (machine.statename == "SUBMIT_ORDER") {
+      machine.view.Click("#order_submit_button");
+      test_spool();
+    }
+  }
+  
+  //================  TEST  ====================
+  machine.run_finish_order = function() {
+    print("XXX");
+    var states = ["",
+                  "CLICK_ORDER_INVOICE_BUTTON",
+                  "CLICK_ORDER_FINISH_BUTTON",
+                  "DONE"
+                 ]
+    machine.statename = states[machine.state];
+    print("## run_finish_one_order:" + machine.state + ':' + machine.statename);
+    if (machine.statename == "") {
+      //machine.view.ExecuteJS("route('tables');");
+      //machine.view.ExecuteJS("$($('.table')[0]).mousedown();");
+      machine.view.MouseDown(".table");
+      machine.state++;
+    //------------ STATE -----------------------
+    } else if (machine.statename == "CLICK_ORDER_INVOICE_BUTTON") {
+      //machine.view.ExecuteJS("$('#order_invoice_button').click();");
+      machine.view.Click("#order_invoice_button");
+      machine.state++;
+    //------------ STATE -----------------------
+    } else if (machine.statename == "CLICK_ORDER_FINISH_BUTTON") {
+      if ( machine.view.GetElement('#invoices').css.display == 'block') {
+        machine.view.ExecuteJS("$('#invoices a.finish_button').click();");
+        //machine.view.Click(".finish_button");
+        machine.state++;
+      } else {
+        print("Waiting for div#invoice to be shown");
+      }
+    //------------ STATE -----------------------
     } else {
       test_spool();
     }
@@ -177,8 +232,15 @@ var Machine = function (name) {
 
 var machine = new Machine("SalorHospitality");
 
+// this test suite segfaults a lot
 machine.tests = [function() { machine.run_login('http://localhost:3000') },
-                 machine.run_order_one_article
+                 machine.run_order_one_article,
+                 machine.run_finish_order
                 ];
+
+// this test suite runs fine, wihtout segfaults
+// machine.tests = [function() { machine.run_login('http://localhost:3000') },
+//                  machine.run_performance
+//                 ];
 
 test_spool(); // process all tests as defined and ordered in machine.tests
