@@ -8,4 +8,7 @@ view.FinishedLoadingSignal.connect(function (str) {
   print(dump(el));
   var el2 = view.GetElement("#cash_drop",["background-color", "display"]);
   print(dump(el2));
+  
+  var el3 = view.GetElement("#this_element_doesn't_exist",["background-color", "display"]);
+  print(dump(el3));
 });

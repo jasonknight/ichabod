@@ -110,8 +110,13 @@ QString TestView::GetContentOfElement(QString selector) {
 QVariantMap TestView::GetElement(QString selector) {
     QWebPage * p = (QWebPage *) this->page;
     QWebElement el = p->mainFrame()->findFirstElement(selector);
-    qDebug() << "Element found";
+
     QVariantMap map;
+    if (el.isNull()) {
+        map["isNull"] = true;
+        return map;
+    }
+    map["isNull"] = false;
     map["classes"] = QVariant(el.classes());
     map["tagName"] = QVariant(el.tagName());
     QVariantMap attrs;
@@ -131,8 +136,12 @@ QVariantMap TestView::GetElement(QString selector) {
 QVariantMap TestView::GetElement(QString selector, QStringList css_attrs) {
     QWebPage * p = (QWebPage *) this->page;
     QWebElement el = p->mainFrame()->findFirstElement(selector);
-    qDebug() << "Element found";
     QVariantMap map;
+    if (el.isNull()) {
+        map["isNull"] = true;
+        return map;
+    }
+    map["isNull"] = false;
     map["classes"] = QVariant(el.classes());
     map["tagName"] = QVariant(el.tagName());
     QVariantMap attrs;
