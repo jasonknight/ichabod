@@ -159,7 +159,9 @@ var Machine = function (name) {
     //------------ STATE -----------------------
     } else if (machine.statename == "CLICK_ORDER_FINISH_BUTTON") {
       if ( machine.view.GetElement('#invoices').css.display == 'block') {
-        machine.view.ExecuteJS("$('#invoices a.finish_button').click();");
+        setTimeout(function(){
+          machine.view.ExecuteJS("$('#invoices a.finish_button').click();");
+        }, 1000);
         //machine.view.Click(".finish_button");
         machine.state++;
       } else {
@@ -233,7 +235,7 @@ var Machine = function (name) {
 var machine = new Machine("SalorHospitality");
 
 // this test suite segfaults a lot
-machine.tests = [function() { machine.run_login('http://localhost:3000') },
+machine.tests = [function() { machine.run_login('http://demo1.sh.red-e.eu') },
                  machine.run_order_one_article,
                  machine.run_finish_order
                 ];
