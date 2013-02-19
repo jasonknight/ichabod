@@ -1,4 +1,5 @@
-env.modules.obj = function () {
+env.modules.ichabod = {};
+env.modules.ichabod.obj = function () {
   var self = this;
   this.name = "TestObject";
 }

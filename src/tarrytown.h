@@ -10,7 +10,10 @@
 #include <QScriptEngine>
 #include <QScriptable>
 #include <QApplication>
+#include <QDesktopWidget>
+#include <QVariantMap>
 #include <QDebug>
+extern QVariantMap toMap(QRect r);
 class TarryTown : public QObject
 {
     Q_OBJECT
@@ -24,6 +27,18 @@ public:
     Q_INVOKABLE void exit() { QApplication::exit();}
     Q_INVOKABLE void restart() {this->evaluate(this->main_code,this->main_filename);}
     Q_INVOKABLE void breakpoint();
+    Q_INVOKABLE QVariantMap window() {
+        QVariantMap m;
+        QDesktopWidget *d = QApplication::desktop();
+        m["geometry"] = QVariant(toMap(d->screenGeometry(-1)));
+        return m;
+    }
+    Q_INVOKABLE QVariantMap window(int scr) {
+        QVariantMap m;
+        QDesktopWidget *d = QApplication::desktop();
+        m["geometry"] = QVariant(toMap(d->screenGeometry(scr)));
+        return m;
+    }
     QScriptValue toWrapper(QObject *object);
     QScriptEngine *engine() const;
     bool hasIntervalTimers() const;

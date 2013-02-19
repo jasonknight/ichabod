@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <title>Ichabod Tes HTML</title>
+    <script type="text/javascript">
+      var testVariable = "Hi, I am a test variable";
+      function populateInfo() {
+        var el = document.getElementById("user_agent");
+        el.innerHTML = navigator.userAgent;
+      }
+    </script>
+  </head>
+  <body onLoad="populateInfo();">
+    <div id='main'>
+      <h1> Welcome to Ichabod </h1>
+      <div id="main">
+        <table id="browser_info">
+          <tr>
+            <td>User Agent</td>
+            <td id="user_agent"></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

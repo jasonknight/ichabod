@@ -1,0 +1,3 @@
+# IO.dir(str)
+
+Returns an array of objects with details on all entries in the specified directory.

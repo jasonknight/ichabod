@@ -7,6 +7,7 @@ TestPage::TestPage(QObject * parent):QWebPage(parent) {
     this->num_of_downloads = 0;
     this->downloaded_files = new QStringList;
     this->console_messages = new QStringList;
+    user_agent = "";
 }
 
 void TestPage::javaScriptConsoleMessage ( const QString & message, int lineNumber, const QString & sourceID  ) {
@@ -29,7 +30,10 @@ void TestPage::javaScriptAlert(QWebFrame* /*frame*/, const QString& msg) {
    return;
 }
 QString TestPage::userAgentForUrl(const QUrl& url) const {
-  return QWebPage::userAgentForUrl(url);
+    if (user_agent == "")
+        return QWebPage::userAgentForUrl(url);
+    else
+        return user_agent;
 }
 void TestPage::setUserAgent(const QString& userAgent) {
   user_agent = userAgent;

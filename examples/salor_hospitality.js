@@ -1,35 +1,7 @@
 /* ============================================ */
 /* ==========  HELPER FUNCTIONS =============== */
 /* ============================================ */
-env.sendText = function (target,text) {
-  try {
-    var parts = text.split("");
-    for (var i = 0; i < parts.length; i++) {
-      KeyPress(target,parts[i]);
-      KeyRelease(target,parts[i]);
-    }
-  } catch (err) {
-    print("Send error: " + err);
-  }
-}
 
-env.sendKey = function (target,key) {
-  KeyPress(target,key);
-  KeyRelease(target,key);
-}
-
-var Content = function (view) {
-  var self = this;
-  this.view = view;
-  this.has = function (text) {
-    return (self.view.GetContent().indexOf(text) != -1);
-  }
-  this.of = function (id) {
-    self._type = "Element["+id+"]";
-    self._content = self.view.GetContentOfElement(id);
-    return self;
-  }
-}
 
 function test_spool() {
   print("\n\n");

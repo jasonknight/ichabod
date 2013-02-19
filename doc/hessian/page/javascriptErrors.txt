@@ -1,0 +1,3 @@
+# Hessian.Page.javascriptErrors
+
+Returns an array of all javascript errors seen.

@@ -17,6 +17,9 @@ public:
     QString alert_string;
     int num_of_downloads;
     QStringList * downloaded_files;
+    Q_INVOKABLE QObject * GetMainFrame() { return (QObject *)this->mainFrame();}
+    Q_INVOKABLE void SetUserAgent(QString name) { setUserAgent(name);}
+    Q_INVOKABLE void SetAlertString(QString alert_string) { setAlertString(alert_string);}
 signals:
     void FileDownloadedSignal(QString fname);
 public slots:

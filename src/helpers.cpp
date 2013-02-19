@@ -81,3 +81,12 @@ extern QVariantMap toMap(QFileInfo file_info) {
     m["ownerId"] = file_info.ownerId();
     return m;
 }
+extern QVariantMap toMap(const QRect r) {
+    QVariantMap m;
+    m["x"] = r.x();
+    m["y"] = r.y();
+    m["width"] = r.width();
+    m["height"] = r.height();
+
+    return m;
+}

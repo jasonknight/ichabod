@@ -116,12 +116,12 @@ void TarryTown::emitScriptError()
 }
 void TarryTown::KeyPress(QScriptValue target,QString text) {
     Hessian * tv = (Hessian *)target.toQObject();
-    QWebView * v = tv->GetView();
+    QWebView * v = (QWebView*)tv->GetView();
     QApplication::sendEvent(v,getKeyEvent(text,"press"));
 }
 void TarryTown::KeyRelease(QScriptValue target, QString text) {
     Hessian * tv = (Hessian *)target.toQObject();
-    QWebView * v = tv->GetView();
+    QWebView * v = (QWebView*)tv->GetView();
     QApplication::sendEvent(v,getKeyEvent(text,"release"));
 }
 void TarryTown::TestFailure(QString msg) {
