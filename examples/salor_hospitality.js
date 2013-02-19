@@ -59,7 +59,7 @@ var Machine = function (name) {
       machine.state++;
     //------------ STATE -----------------------
     } else if (machine.statename == "LOGIN_SUBMIT") {
-      if (machine.content.has("SalorHospitality Login") != -1) {
+      if (machine.content.has("SalorHospitality Login")) {
         sendText(machine.view,"000");
         sendKey(machine.view,"Enter");
         machine.state++;
@@ -68,7 +68,7 @@ var Machine = function (name) {
       }
     //------------ STATE -----------------------
     } else if (machine.statename == "WAIT_FOR_TABLES_VIEW") {
-      if (machine.content.has("<div id='tables'></div>") != -1) {
+      if (machine.content.has("<div id='tables'></div>")) {
         machine.advance_spool();
       } else {
         print("Waiting for page load.");
