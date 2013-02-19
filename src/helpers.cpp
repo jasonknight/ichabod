@@ -5,6 +5,8 @@
 #include <QStringList>
 #include <QScriptValue>
 #include <QDebug>
+#include <QMetaProperty>
+#include <QFileInfo>
 extern QString idOf(QScriptValue v) {
     QVariant val = v.toVariant();
     //qDebug() << "### idOf(" << val.typeName() << ")";
@@ -50,4 +52,32 @@ extern QVariantMap toMap(QWebElement el, QStringList css_attrs) {
     map["children"] = QVariant(children);
     map["css"] = QVariant(css);
     return map;
+}
+extern QVariantMap toMap(QObject * object) {
+    qDebug() << "Converting " << object;
+    QVariantMap map;
+    const QMetaObject * metaobject = object->metaObject();
+    int count = metaobject->propertyCount();
+    for (int i = 0; i < count; ++i) {
+        QMetaProperty metaproperty = metaobject->property(i);
+        const char * name = metaproperty.name();
+        QVariant value = object->property(name);
+        map.insert(name,value);
+    }
+    return map;
+}
+extern QVariantMap toMap(QFileInfo file_info) {
+    QVariantMap m;
+    m["name"] = file_info.fileName();
+    m["path"] = file_info.absoluteFilePath();
+    m["baseDir"] = file_info.path();
+    m["isDir"] = file_info.isDir();
+    m["isExecutable"] = file_info.isExecutable();
+    m["isHidden"] = file_info.isHidden();
+    m["isReadable"] = file_info.isReadable();
+    m["isWritable"] = file_info.isWritable();
+    m["isSymlink"] = file_info.isSymLink();
+    m["owner"] = file_info.owner();
+    m["ownerId"] = file_info.ownerId();
+    return m;
 }

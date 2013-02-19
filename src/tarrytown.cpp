@@ -6,7 +6,8 @@
 #include "io.h"
 #include "factory.h"
 #include "getkeyevent.h"
-#include "testview.h"
+#include "hessian.h"
+#include <QTextStream>
 TarryTown::TarryTown(QObject *parent) :
     QObject(parent)
 {
@@ -114,12 +115,12 @@ void TarryTown::emitScriptError()
     }
 }
 void TarryTown::KeyPress(QScriptValue target,QString text) {
-    TestView * tv = (TestView *)target.toQObject();
+    Hessian * tv = (Hessian *)target.toQObject();
     QWebView * v = tv->GetView();
     QApplication::sendEvent(v,getKeyEvent(text,"press"));
 }
 void TarryTown::KeyRelease(QScriptValue target, QString text) {
-    TestView * tv = (TestView *)target.toQObject();
+    Hessian * tv = (Hessian *)target.toQObject();
     QWebView * v = tv->GetView();
     QApplication::sendEvent(v,getKeyEvent(text,"release"));
 }
@@ -129,4 +130,36 @@ void TarryTown::TestFailure(QString msg) {
 void TarryTown::DebugScriptValue(QScriptValue value) {
     QVariant val = value.toVariant();
     qDebug() << val;
+}
+void TarryTown::breakpoint() {
+    qDebug() << "Entering debugging mode";
+    QTextStream in(stdin);
+    QTextStream out(stdout);
+    QString to_eval;
+    while (to_eval != "cont") {
+        out << "> ";
+        out.flush();
+        to_eval = in.readLine();
+        to_eval = to_eval.replace(QString("\n"),"");
+        if (to_eval != "cont") {
+            QScriptValue result = p_engine->evaluate(to_eval);
+            if (p_engine->hasUncaughtException()) {
+                QStringList backtrace = p_engine->uncaughtExceptionBacktrace();
+                fprintf (stderr, "    %s\n\n", qPrintable(backtrace.join("\n")));
+            } else {
+                QVariant value = result.toVariant();
+                if (value.type() == QMetaType::QVariantMap) {
+                    qDebug() << "=> " << value.toMap();
+                } else if (value.type() == QMetaType::QVariantList) {
+                    qDebug() << "=> " << value.toList();
+                } else if (value.type() == QMetaType::QVariantHash) {
+                    qDebug() << "=> " << value.toHash();
+                } else if (value.type() == QMetaType::QString) {
+                    qDebug() << "=> \n" << value.toString();
+                } else {
+                    qDebug() << "=> " << value;
+                }
+            } // if (p_engine->hasUncaughtException())
+        }
+    }
 }

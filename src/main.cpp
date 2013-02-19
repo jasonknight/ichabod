@@ -12,6 +12,7 @@
 #include "macros.h"
 #include "browserdialog.h"
 #include "tarrytown.h"
+#include <QTimer>
 
 int main(int argc, char *argv[])
 {
@@ -63,6 +64,9 @@ int main(int argc, char *argv[])
               env->evaluate(lib_code,info.fileName());
           }
       }
-      env->evaluate(code,fileName);
+      env->main_code = code;
+      env->main_filename = fileName;
+      //env->evaluate(code,fileName);
+      QTimer::singleShot(0,env,SLOT(restart()));
       return a.exec();
 }

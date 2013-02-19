@@ -43,6 +43,7 @@ function test_spool() {
     machine.current_test_index++;
   } else {
     print("\n\n DONE!");
+    exit(0);
   }
 }
 

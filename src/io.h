@@ -13,6 +13,7 @@ public:
     explicit IO(QObject *parent = 0);
     Q_INVOKABLE QString read(QString file_name);
     Q_INVOKABLE bool write(QString fileName,QString contents);
+    Q_INVOKABLE QVariant dir(QString name);
 signals:
 
 public slots:

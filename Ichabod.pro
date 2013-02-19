@@ -15,7 +15,7 @@ TEMPLATE = app
 
 
 SOURCES += src/main.cpp \
-    src/testview.cpp \
+    src/hessian.cpp \
     src/testpage.cpp \
     src/cookiejar.cpp \
     src/network.cpp \
@@ -28,7 +28,7 @@ SOURCES += src/main.cpp \
     src/helpers.cpp
 
 HEADERS += \
-    src/testview.h \
+    src/hessian.h \
     src/testpage.h \
     src/cookiejar.h \
     src/network.h \

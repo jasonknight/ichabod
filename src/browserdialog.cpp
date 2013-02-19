@@ -1,6 +1,6 @@
 #include "browserdialog.h"
 
-#include "testview.h"
+#include "hessian.h"
 BrowserDialog::BrowserDialog(QWidget *parent) :
     QDialog(parent)
 {
