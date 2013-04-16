@@ -33,7 +33,7 @@ case $host in
     AC_MSG_NOTICE(I'm assuming this is Linux)
     AC_PATH_XTRA
     QTLIBS="-Wl,-rpath, -lQtCore -lQtGui -lQtWebKit -lQtNetwork -lQtScript -lXtst $X_LIBS $X_EXTRA_LIBS -lpthread"
-    QTINC="-m64 -D_REENTRANT -DQT_WEBKIT -DQT_NO_DEBUG -DQT_WEBKIT_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_SHARED -DQT_SCRIPT_LIB -I. -I/usr/share/qt4/mkspecs/linux-g++-64 -I$QTDIR/include/QtCore -I$QTDIR/include/QtNetwork -I$QTDIR/include/QtGui -I$QTDIR/include/QtWebKit -I$QTDIR/include/QtScript -I$QTDIR/include"
+    QTINC="-D_REENTRANT -DQT_WEBKIT -DQT_NO_DEBUG -DQT_WEBKIT_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_SHARED -DQT_SCRIPT_LIB -I. -I$QTDIR/include/QtCore -I$QTDIR/include/QtNetwork -I$QTDIR/include/QtGui -I$QTDIR/include/QtWebKit -I$QTDIR/include/QtScript -I$QTDIR/include"
     QTBIN="$QTDIR/bin"
     ;;
 esac
