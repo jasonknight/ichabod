@@ -9,3 +9,4 @@ moc_*
 *.user
 Makefile
 ichabod
+autom4te.cache
