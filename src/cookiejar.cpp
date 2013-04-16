@@ -55,7 +55,7 @@ CookieJar::CookieJar(QObject* parent)
 #else
     m_path = QDir::homePath() + "/.TestBrowser";
 #endif
-    m_path = "/tmp";
+    m_path = ".Ichabod";
     //qDebug() << path;
 
 
@@ -74,7 +74,7 @@ CookieJar::~CookieJar()
 
 void CookieJar::Init() {
     QDir().mkpath(m_path);
-    m_file.setFileName(m_path + "/CookieJar");
+    m_file.setFileName(m_path + "CookieJar");
     loadFromDisk();
 }
 

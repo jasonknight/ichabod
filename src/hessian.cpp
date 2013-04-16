@@ -7,20 +7,27 @@
 #include "network.h"
 #include "cookiejar.h"
 #include <QDebug>
+#include <QDir>
+
 
 extern QString idOf(QScriptValue v);
 extern QVariantMap toMap(QWebElement el, QStringList css_attrs);
 Hessian::Hessian(QObject *parent) : QObject(parent), QScriptable () {
     this->use_cache = true;
     this->use_local_db = true;
-    this->cache_location = QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
-    this->local_db_location = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
+    //this->cache_location = QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
+    //this->local_db_location = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
+    this->local_db_location = ".databases";
+    this->cache_location = ".cache";
+    QDir().mkpath(this->local_db_location);
+    QDir().mkpath(this->cache_location);
     this->use_cookies = true;
     this->cookie_location = "";
     this->name = "Default";
     this->has_dialog = false;
     _created = false;
     size = new QRect(100,100,640,480);
+    this->ready = false;
 }
 Hessian::~Hessian() {
     if (this->has_dialog == true) {
@@ -61,6 +68,7 @@ void Hessian::CreateView() {
     connect(view, SIGNAL(loadFinished(bool)), SLOT(FinishedLoading(bool)));
     //connect(this,SIGNAL(loadUrlSignal(QString&)),this,SLOT(loadUrl(QString&)));
     _created = true;
+    this->ready = true;
 
 }
 bool Hessian::SetAttribute(QString attribute, QString value) {
@@ -83,6 +91,7 @@ void Hessian::Load(QString url) {
         return;
     this->lastLoadedPath = url;
     QUrl location = QUrl(url);
+    this->ready = false;
     this->view->load(location);
 }
 void Hessian::JavaScriptWindowObjectCleared() {
@@ -92,6 +101,7 @@ void Hessian::SetProgress(int p) {
     this->progress = p;
 }
 void Hessian::FinishedLoading(bool b) {
+    this->ready = true;
     emit FinishedLoadingSignal(this->name);
 }
 QVariant Hessian::ExecuteJS(QString js) {
@@ -159,6 +169,7 @@ QVariantMap Hessian::GetElement(QString selector) {
     }
     QStringList css_attrs = QStringList() << "display" << "background" << "color" << "font-size" << "position" << "top" << "left" << "bottom" << "right" << "border";
     map = toMap(el,css_attrs);
+    map["isVisible"] = el.evaluateJavaScript("$('" + selector + "').is(':visible');");
     return map;
 }
 QVariantMap Hessian::GetElement(QString selector, QStringList css_attrs) {
@@ -176,6 +187,46 @@ QVariantMap Hessian::GetElement(QString selector, QStringList css_attrs) {
     map = toMap(el,css_attrs);
     return map;
 }
+
+
+QVariantMap Hessian::GetElements(QString selector) {
+    QVariantMap map;
+    if (!_created) {
+        map["isNull"] = true;
+        return map;
+    }
+    QWebPage * p = (QWebPage *) this->page;
+    QWebElementCollection col = p->mainFrame()->findAllElements(selector);
+    int i = 0;
+    foreach (QWebElement el, col) {
+        QVariantMap elmap;
+        QStringList css_attrs = QStringList() << "display" << "background" << "color" << "font-size" << "position" << "top" << "left" << "bottom" << "right" << "border";
+        elmap = toMap(el,css_attrs);
+        elmap["isVisible"] = el.evaluateJavaScript("$('" + selector + "').is(':visible');");
+        map.insert(QString::number(i),QVariant(elmap));
+        i++;
+    }
+    return map;
+}
+QVariantMap Hessian::GetElements(QString selector, QStringList css_attrs) {
+    QVariantMap map;
+    if (!_created) {
+        map["isNull"] = true;
+        return map;
+    }
+    QWebPage * p = (QWebPage *) this->page;
+    QWebElementCollection col = p->mainFrame()->findAllElements(selector);
+    int i = 0;
+    foreach (QWebElement el, col) {
+        QVariantMap elmap;
+        elmap = toMap(el,css_attrs);
+        elmap["isVisible"] = el.evaluateJavaScript("$('" + selector + "').is(':visible');");
+        map.insert(QString::number(i),elmap);
+        i++;
+    }
+    return map;
+}
+
 
 QObject * Hessian::GetPage() {
     if (!_created)

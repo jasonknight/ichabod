@@ -39,8 +39,9 @@ HEADERS += \
     src/downloader.h \
     src/browserdialog.h \
     src/tarrytown.h \
-    src/getkeyevent.h
-LIBS += -lrt
+    src/getkeyevent.h \
+    src/chartbl.h
+LIBS += -lrt -L/usr/X11R6/lib -lXtst -lX11
 
 OTHER_FILES += \
     test.js

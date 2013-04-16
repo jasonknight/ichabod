@@ -16,6 +16,31 @@ env.getType = function (obj) {
     return (typeof obj);
   } 
 }
+env.failures = 0;
+env.failures_messages = [];
+env.fail = function (msg) {
+  print("# ------------------------------------- #");
+  print("# " + msg + "\n");
+  print("# ------------------------------------- #");
+  env.failures_messages.push(msg);
+  env.failures++;
+}
+env.fatal = function (msg) {
+  fail(msg);
+  exit();
+}
+env.report_and_exit = function () {
+  env.report();
+  exit();
+}
+env.report = function () {
+  print("# ------------------------------------- #");
+  print("# Failures: " + env.failures);
+  for (var i = 0; i < env.failures; i++) {
+    print("# " + env.failures_messages[i] + "");
+  }
+  print("# ------------------------------------- #");
+}
 env.dump = function (object,depth) {
   if (!depth)
     depth = 0;
@@ -36,12 +61,9 @@ env.dump = function (object,depth) {
   return text;
 }
 env.sendText = function (target,text) {
+  if (target.p_inner_object) { target = target.p_inner_object;}
   try {
-    var parts = text.split("");
-    for (var i = 0; i < parts.length; i++) {
-      KeyPress(target,parts[i]);
-      KeyRelease(target,parts[i]);
-    }
+    env.p_sendText(target,text);
   } catch (err) {
     print("Send error: " + err);
   }
@@ -49,8 +71,10 @@ env.sendText = function (target,text) {
 
 env.sendKey = function (target,key) {
   if (target.p_inner_object) { target = target.p_inner_object;}
-  KeyPress(target,key);
-  KeyRelease(target,key);
+  pKeyPress(target,key);
+  setTimeout( function () {
+    pKeyRelease(target,key);
+  },10);
 }
 
 var Content = function (view) {

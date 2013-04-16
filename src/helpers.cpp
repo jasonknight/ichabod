@@ -24,6 +24,16 @@ extern QVariantMap toMap(QWebElement el, QStringList css_attrs) {
     map["isNull"] = false;
     map["classes"] = QVariant(el.classes());
     map["tagName"] = QVariant(el.tagName());
+    QRect rect = el.geometry();
+
+    QVariantMap geo;
+
+    geo["width"] = rect.width();
+    geo["height"] = rect.height();
+    geo["x"] = rect.x();
+    geo["y"] = rect.y();
+    map["geometry"] = QVariant(geo);
+
     QVariantMap attrs;
     QStringList attributes = el.attributeNames();
     foreach(QString name,attributes) {

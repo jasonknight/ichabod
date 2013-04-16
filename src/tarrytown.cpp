@@ -1,4 +1,4 @@
-#include "tarrytown.h"
+
 #include <QScriptValueIterator>
 #include <QDateTime>
 #include <QApplication>
@@ -8,11 +8,133 @@
 #include "getkeyevent.h"
 #include "hessian.h"
 #include <QTextStream>
+#include "tarrytown.h"
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <X11/Xlibint.h>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/cursorfont.h>
+#include <X11/keysymdef.h>
+#include <X11/keysym.h>
+#include <X11/extensions/XTest.h>
+#include <iostream>
+#include <iomanip>
+#include <iostream>
+#include "chartbl.h"
+
+//X11 stuff
+
+#define PROG "Ichabod"
+Display * remoteDisplay (const char * DisplayName) {
+
+  int Event, Error;
+  int Major, Minor;
+
+  // open the display
+  Display * D = XOpenDisplay ( DisplayName );
+
+  // did we get it?
+  if ( ! D ) {
+    // nope, so show error and abort
+    std::cerr << PROG << ": could not open display \"" << XDisplayName ( DisplayName )
+         << "\", aborting." << std::endl;
+    exit ( EXIT_FAILURE );
+  }
+
+  // does the remote display have the Xtest-extension?
+  if ( ! XTestQueryExtension (D, &Event, &Error, &Major, &Minor ) ) {
+    // nope, extension not supported
+    std::cerr << PROG << ": XTest extension not supported on server \""
+         << DisplayString(D) << "\"" << std::endl;
+
+    // close the display and go away
+    XCloseDisplay ( D );
+    exit ( EXIT_FAILURE );
+  }
+
+  // print some information
+  std::cerr << "XTest for server \"" << DisplayString(D) << "\" is version "
+       << Major << "." << Minor << "." << std::endl << std::endl;;
+
+  // execute requests even if server is grabbed
+  XTestGrabControl ( D, True );
+
+  // sync the server
+  XSync ( D,True );
+
+  // return the display
+  return D;
+}
+static Display *RemoteDpy;
+void sendChar(char c) {
+
+
+    KeySym ks, sks, *kss, ksl, ksu;
+    KeyCode kc, skc;
+    int Delay = 10;
+    int syms;
+#ifdef DEBUG
+    int i;
+#endif
+
+    sks=XK_Shift_L;
+
+    ks=XStringToKeysym(chartbl[0][(unsigned char)c]);
+    if ( ( kc = XKeysymToKeycode ( RemoteDpy, ks ) ) == 0 )
+    {
+        std::cerr << "No keycode on remote display found for char: " << c << std::endl;
+        return;
+    }
+    if ( ( skc = XKeysymToKeycode ( RemoteDpy, sks ) ) == 0 )
+    {
+        std::cerr << "No keycode on remote display found for XK_Shift_L!" << std::endl;
+        return;
+    }
+
+    kss=XGetKeyboardMapping(RemoteDpy, kc, 1, &syms);
+    if (!kss)
+    {
+        std::cerr << "XGetKeyboardMapping failed on the remote display (keycode: " << kc << ")" << std::endl;
+        return;
+    }
+    for (; syms && (!kss[syms-1]); syms--);
+    if (!syms)
+    {
+        std::cerr << "XGetKeyboardMapping failed on the remote display (no syms) (keycode: " << kc << ")" << std::endl;
+        XFree(kss);
+        return;
+    }
+    XConvertCase(ks,&ksl,&ksu);
+#ifdef DEBUG
+    std::cout << "kss: ";
+    for (i=0; i<syms; i++) std::cout << kss[i] << " ";
+    std::cout << "(" << ks << " l: " << ksl << "  h: " << ksu << ")" << std::endl;
+#endif
+    if (ks==kss[0] && (ks==ksl && ks==ksu)) sks=NoSymbol;
+    if (ks==ksl && ks!=ksu) sks=NoSymbol;
+    if (sks!=NoSymbol) XTestFakeKeyEvent ( RemoteDpy, skc, True, Delay );
+    XTestFakeKeyEvent ( RemoteDpy, kc, True, Delay );
+    XFlush ( RemoteDpy );
+    XTestFakeKeyEvent ( RemoteDpy, kc, False, Delay );
+    if (sks!=NoSymbol) XTestFakeKeyEvent ( RemoteDpy, skc, False, Delay );
+    XFlush ( RemoteDpy );
+    XFree(kss);
+}
+
+
 TarryTown::TarryTown(QObject *parent) :
     QObject(parent)
 {
     p_engine = new QScriptEngine(this);
     p_originalGlobalObject = p_engine->globalObject();
+    RemoteDpy = remoteDisplay(NULL);
     rideOut();
 }
 TarryTown::~TarryTown() {}
@@ -114,15 +236,25 @@ void TarryTown::emitScriptError()
 
     }
 }
-void TarryTown::KeyPress(QScriptValue target,QString text) {
-    Hessian * tv = (Hessian *)target.toQObject();
-    QWebView * v = (QWebView*)tv->GetView();
-    QApplication::sendEvent(v,getKeyEvent(text,"press"));
+void TarryTown::p_sendText(QScriptValue target,QString text) {
+    int i;
+    for (i = 0; i < text.length(); i++) {
+        QChar c = text.at(i);
+        sendChar(c.toAscii());
+    }
 }
-void TarryTown::KeyRelease(QScriptValue target, QString text) {
+
+void TarryTown::pKeyPress(QScriptValue target,QString text) {
     Hessian * tv = (Hessian *)target.toQObject();
     QWebView * v = (QWebView*)tv->GetView();
-    QApplication::sendEvent(v,getKeyEvent(text,"release"));
+    QKeyEvent * event = getKeyEvent(text,"press");
+    QApplication::sendEvent(v,event);
+}
+void TarryTown::pKeyRelease(QScriptValue target, QString text) {
+    Hessian * tv = (Hessian *)target.toQObject();
+    QWebView * v = (QWebView*)tv->GetView();
+    QKeyEvent * event = getKeyEvent(text,"release");
+    QApplication::sendEvent(v,event);
 }
 void TarryTown::TestFailure(QString msg) {
     printf("TestFailure: %s\n",msg.toAscii().data());
@@ -162,4 +294,10 @@ void TarryTown::breakpoint() {
             } // if (p_engine->hasUncaughtException())
         }
     }
+}
+void TarryTown::sleep(int secs) {
+    sleep(secs);
+}
+void TarryTown::usleep(int usecs) {
+    usleep(usecs);
 }

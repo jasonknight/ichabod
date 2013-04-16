@@ -13,6 +13,8 @@
 #include <QDesktopWidget>
 #include <QVariantMap>
 #include <QDebug>
+#include <unistd.h>
+
 extern QVariantMap toMap(QRect r);
 class TarryTown : public QObject
 {
@@ -21,12 +23,15 @@ public:
     TarryTown(QObject *parent = 0);
     ~TarryTown();
     Q_INVOKABLE QScriptValue evaluate(const QString &code, const QString &fileName = QString());
-    Q_INVOKABLE void KeyPress(QScriptValue target,QString text);
-    Q_INVOKABLE void KeyRelease(QScriptValue target,QString text);
+    Q_INVOKABLE void pKeyPress(QScriptValue target,QString text);
+    Q_INVOKABLE void pKeyRelease(QScriptValue target,QString text);
     Q_INVOKABLE void DebugScriptValue(QScriptValue value);
     Q_INVOKABLE void exit() { QApplication::exit();}
     Q_INVOKABLE void restart() {this->evaluate(this->main_code,this->main_filename);}
     Q_INVOKABLE void breakpoint();
+    Q_INVOKABLE void sleep(int secs);
+    Q_INVOKABLE void usleep(int usecs);
+    Q_INVOKABLE void p_sendText(QScriptValue target, QString text);
     Q_INVOKABLE QVariantMap window() {
         QVariantMap m;
         QDesktopWidget *d = QApplication::desktop();
