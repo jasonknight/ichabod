@@ -2,7 +2,7 @@ Source: ichabod
 Section: unknown
 Priority: extra
 Maintainer:  Jason Martin <jason@jason-knight-martin.com>
-Build-Depends: debhelper, autotools-dev, qt4-dev-tools, libqtwebkit-dev, automoc, dh-autoreconf
+Build-Depends: debhelper, autotools-dev, qt4-dev-tools, libqtwebkit-dev, automoc, dh-autoreconf, libxtst-dev
 Standards-Version: 3.9.2
 Homepage: http://red-e.eu/apps/ichabod
 #Vcs-Git: git://github.com/jasonknight/ichabod.git
@@ -10,6 +10,6 @@ Homepage: http://red-e.eu/apps/ichabod
 
 Package: ichabod
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libqtcore4, libqt4-network
+Depends: ${shlibs:Depends}, ${misc:Depends}, libqtcore4, libqt4-network, libxtst6
 Description: <insert up to 60 chars description>
  <insert long description, indented with spaces>
