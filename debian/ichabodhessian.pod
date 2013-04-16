@@ -1,0 +1,144 @@
+=head1 NAME
+
+Hessian
+
+=head1 OPTIONS
+
+string name
+
+=head1 USAGE
+
+var browser = new Hessian("myHessian");
+
+=head1 SYNOPSIS
+
+ichabod is centered around Hessians, headless browsers that can
+be controled through method calls. The Hessian class is a wrapper
+around Factory.GetTestView(name) which is a direct call into the
+C++ API. Hessian provides some additional features, as well
+as exposing all of the C++ API calls. To use the C++ Call, 
+downcase the first letter of the call, as in getElement instead
+of GetElement. Within ichabod, the convention is that all direct
+to C++ calls are B<LikeThis> and all wrapper calls via javascript
+are B<likeThis>.
+
+
+=head1 DESCRIPTION
+
+You can create as many Hessians as your RAM will allow, the maximum
+I have ever tested on a single machine is 200. Notice that their
+is a difference made between B<Hessian> and B<new Hessian>. The 
+first means that we are talking about the C++ Object, and the
+second means we are talking about the JavaScript helper function.
+
+Sometimes there is no need to distinguish between them as the
+C++ Object's API is more or less called transparently. 
+
+=head1 FUNCTIONS ON THE JS OBJ
+
+=head2 B<new Hessian.center|topLeft|topRight...>
+
+You can position your Hessians on the screen by using the methods
+B<center>, B<topLeft>, B<topRight>, B<bottomLeft>,B<bottomRight> and
+so on.
+
+These methods are only available on the Javascript helper function.
+
+=head1 FUNCTIONS ON THE C++ OBJ
+
+=head2 B<Hessian.CreateView()>
+
+The constructor for the Hessian does not actually create
+the webview, the Hessian class is a C++ Wrapper around
+QWebView (which you can access directly with GetView).
+
+This allows you to manipulate the attributes of the 
+Hessian with B<SetAttribute> before you actually
+create and begin using the view.
+
+YOU MUST CALL THIS FUNCTION BEFORE YOU ACTUALLY USE
+THE VIEW! It will segfault otherwise :)
+
+=head2 B<Hessian.SetAttribute(string,string)>
+
+You can set some attributes via this method on your Hessian.
+In order to use these attributes, you cannot use the
+Hessian helper new Hessian, you will have to call
+Factory.GetHessian(name) and set it up manually.
+
+The javascript function new Hessian() is just a helper
+function to make it easier to create Hessians.
+
+In theory you can swap out the Hessian backing
+by directly setting Hessian.p_inner_object.
+
+=head2 B<Hessian.SetAttribute("name","SomeNameHere")> 
+
+This is usually set by the constructor, so you should actually
+be using new Hessian("SomeNameHere"); The name of the Hessian
+influences the name of the log file. If you name them all the same,
+then they will use a joined log file.
+
+=head2 B<Hessian.SetAttribute("cache","on")>
+
+Will turn file caching on to simulate a normal browser. This is
+the default. 
+
+=head2 B<Hessian.SetAttribute("db","on")>
+
+This will give your Hessians access to an HTML5 sqlite database.
+
+
+=head2 B<Hessian.setAttribute("cookies","on")>
+
+This will turn on cookie support, it is on by default.
+
+=head1 FUNCTIONS FOR BOTH 
+
+=head2 B<Hessian.show>
+
+While you are developing your test, it will be helpful to actually
+see what is going on. You can show a Hessian by calling show() on the
+object. 
+
+Once you have shown the Hessian, you can right click on any element
+to access the B<WebInspector> which ships with webkit browsers. This
+will help you find Ids and classes on the elements so that you can
+simulate clicks.
+
+=head2 B<Hessian.load(url)>
+
+This will allow you to load a website or local file url. 
+
+	var view = new Hessian("test");
+	// View is already setup for us, so it's okay to load
+	view.load("http://localhost:3000");
+
+=head2 B<Hessian.Click(val)>
+
+If you pass in a string, it would be the equivalent of $(selector).click(); in
+jQuery. 
+
+You can also pass in the object returned from Hessian.GetElement(selector), 
+which will have found the FIRST occurrence of the element with the given 
+selector. When passed a javascript object, Click expects there to be a key
+present called "id".
+
+	view.click("#my_button");
+	// or
+	view.click({id: "#my_button"});
+	// or
+	var elem = view.getElement("#my_button");
+	// do something here.
+	view.click(elem);
+=head2 B<Hessian.Fill(selector,value)>
+
+Fills in a form input with the value string specified. You must
+pass the value as a string, even if it is a number.
+
+	view.fill("#my_text_input","12345");
+=head1 AUTHOR
+
+Jason Martin <jason@jason-knight-martin.com>
+
+=cut
