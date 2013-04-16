@@ -14,33 +14,33 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 
-SOURCES += src/main.cpp \
-    src/hessian.cpp \
-    src/testpage.cpp \
-    src/cookiejar.cpp \
-    src/network.cpp \
-    src/factory.cpp \
-    src/io.cpp \
-    src/logger.cpp \
-    src/downloader.cpp \
-    src/browserdialog.cpp \
-    src/tarrytown.cpp \
-    src/helpers.cpp
+SOURCES += main.cpp \
+    hessian.cpp \
+    testpage.cpp \
+    cookiejar.cpp \
+    network.cpp \
+    factory.cpp \
+    io.cpp \
+    logger.cpp \
+    downloader.cpp \
+    browserdialog.cpp \
+    tarrytown.cpp \
+    helpers.cpp
 
 HEADERS += \
-    src/hessian.h \
-    src/testpage.h \
-    src/cookiejar.h \
-    src/network.h \
-    src/factory.h \
-    src/io.h \
-    src/macros.h \
-    src/logger.h \
-    src/downloader.h \
-    src/browserdialog.h \
-    src/tarrytown.h \
-    src/getkeyevent.h \
-    src/chartbl.h
+    hessian.h \
+    testpage.h \
+    cookiejar.h \
+    network.h \
+    factory.h \
+    io.h \
+    macros.h \
+    logger.h \
+    downloader.h \
+    browserdialog.h \
+    tarrytown.h \
+    getkeyevent.h \
+    chartbl.h
 LIBS += -lrt -L/usr/X11R6/lib -lXtst -lX11
 
 OTHER_FILES += \
