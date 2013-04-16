@@ -9,3 +9,9 @@ moc_*
 *.user
 Makefile
 ichabod
+autom4te.cache
+.deps
+Makefile.in
+*.log
+config.status
+configure
