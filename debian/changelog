@@ -4,8 +4,11 @@ ichabod (0.0.3-1precise) precise; urgency=low
   *  not much
 
   [ Jason Martin ]
+  * build
 
- -- Jason Martin <jason@jason-knight-martin.com>  Thu, 18 Apr 2013 07:06:29 -0400
+  [ Michael Franzl ]
+
+ -- Michael Franzl <office@michaelfranzl.com>  Thu, 18 Apr 2013 13:37:41 +0200
 
 ichabod (0.0.2-3precise) precise; urgency=low
 
