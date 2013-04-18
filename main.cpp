@@ -51,9 +51,18 @@ int main(int argc, char *argv[])
       }
     */
       TarryTown * env = new TarryTown;
+
       QDir dir("./lib");
+      QFileInfoList list;
+      if ( ! dir.exists()) {
+          dir.setPath("/usr/share/ichabod/lib");
+          if (! dir.exists()) {
+              qDebug() << "Cannot find lib, needs to be either: ./lib or /usr/share/ichabod/lib";
+              goto execute_code;
+          }
+      }
       dir.setFilter(QDir::Files);
-      QFileInfoList list = dir.entryInfoList();
+      list  = dir.entryInfoList();
       for (int i = 0; i < list.size(); i++) {
           QFileInfo info = list.at(i);
           QFile file(info.absoluteFilePath());
@@ -64,6 +73,7 @@ int main(int argc, char *argv[])
               env->evaluate(lib_code,info.fileName());
           }
       }
+      execute_code:
       env->main_code = code;
       env->main_filename = fileName;
       //env->evaluate(code,fileName);

@@ -27,7 +27,7 @@ Hessian::Hessian(QObject *parent) : QObject(parent), QScriptable () {
     this->has_dialog = false;
     _created = false;
     size = new QRect(100,100,640,480);
-    this->ready = false;
+    this->p_ready = false;
 }
 Hessian::~Hessian() {
     if (this->has_dialog == true) {
@@ -68,7 +68,7 @@ void Hessian::CreateView() {
     connect(view, SIGNAL(loadFinished(bool)), SLOT(FinishedLoading(bool)));
     //connect(this,SIGNAL(loadUrlSignal(QString&)),this,SLOT(loadUrl(QString&)));
     _created = true;
-    this->ready = true;
+    this->p_ready = true;
 
 }
 bool Hessian::SetAttribute(QString attribute, QString value) {
@@ -91,7 +91,7 @@ void Hessian::Load(QString url) {
         return;
     this->lastLoadedPath = url;
     QUrl location = QUrl(url);
-    this->ready = false;
+    this->p_ready = false;
     this->view->load(location);
 }
 void Hessian::JavaScriptWindowObjectCleared() {
@@ -101,7 +101,8 @@ void Hessian::SetProgress(int p) {
     this->progress = p;
 }
 void Hessian::FinishedLoading(bool b) {
-    this->ready = true;
+    qDebug() << "Setting p_ready to true";
+    this->p_ready = true;
     emit FinishedLoadingSignal(this->name);
 }
 QVariant Hessian::ExecuteJS(QString js) {

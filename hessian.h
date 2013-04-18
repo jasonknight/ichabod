@@ -34,8 +34,9 @@ public:
     Q_PROPERTY( QString lastLoadedPath WRITE setLastLoadedPath READ getLastLoadedPath )
         void setLastLoadedPath(QString str) { lastLoadedPath = str; }
         QString getLastLoadedPath() { return lastLoadedPath; }
-    Q_PROPERTY( bool ready READ getready )
-        bool getready() { return ready; }
+    Q_PROPERTY( bool ready WRITE setready READ getready )
+        bool getready() { return p_ready; }
+        void setready(bool r) { p_ready = r; }
     Q_INVOKABLE QVariantMap         GetElement(QString selector);
     Q_INVOKABLE QVariantMap         GetElement(QString selector,QStringList css_attrs);
     Q_INVOKABLE QVariantMap         GetElements(QString selector);
@@ -93,7 +94,7 @@ private:
     bool has_dialog;
     bool _created;
     QRect*  size;
-    bool ready;
+    bool p_ready;
 };
 
 #endif // Hessian_H
